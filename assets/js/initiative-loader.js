@@ -39,8 +39,8 @@ function initializeInitiativePage() {
     // Add loading state
     articleElement.innerHTML = '<div class="loading">Carregando conteúdo...</div>';
 
-    // Load and render the initiative
-    const initiativePath = `/assets/initiatives/${initiativeId}.md`;
+    // Load and render the initiative - Removida a barra inicial para usar caminho relativo
+    const initiativePath = `assets/initiatives/${initiativeId}.md`;
     
     fetch(initiativePath)
         .then(response => {
