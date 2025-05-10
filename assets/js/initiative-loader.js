@@ -65,6 +65,7 @@ function initializeInitiativePage() {
         `assets/initiatives/${initiativeId}.md`,                      // Relativo à raiz
         `./assets/initiatives/${initiativeId}.md`,                    // Relativo ao diretório atual
         `/assets/initiatives/${initiativeId}.md`,                     // Absoluto
+        `https://raw.githubusercontent.com/guanambi/guanambi.github.io/main/assets/initiatives/${initiativeId}.md`, // GitHub Raw direto
         `/guanambi.github.io/assets/initiatives/${initiativeId}.md`,  // GitHub Pages específico
         `https://guanambi.github.io/assets/initiatives/${initiativeId}.md` // URL Completa
     ];
