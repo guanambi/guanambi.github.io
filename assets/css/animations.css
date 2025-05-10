@@ -1,0 +1,155 @@
+/* Base Animation Classes */
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+/* Fade Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -20px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Slide Animations */
+@keyframes slideInLeft {
+    from {
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Scale Animations */
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    from {
+        transform: scale3d(1, 1, 1);
+    }
+    50% {
+        transform: scale3d(1.05, 1.05, 1.05);
+    }
+    to {
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+/* Attention Seekers */
+@keyframes shake {
+    from, to {
+        transform: translate3d(0, 0, 0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate3d(-5px, 0, 0);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate3d(5px, 0, 0);
+    }
+}
+
+@keyframes bounce {
+    from, 20%, 53%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+        transform: translate3d(0, -30px, 0) scaleY(1.1);
+    }
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+        transform: translate3d(0, -15px, 0) scaleY(1.05);
+    }
+    80% {
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        transform: translate3d(0, 0, 0) scaleY(0.95);
+    }
+    90% {
+        transform: translate3d(0, -4px, 0) scaleY(1.02);
+    }
+}
+
+/* Animation Classes */
+.fade-in { animation-name: fadeIn; }
+.fade-in-up { animation-name: fadeInUp; }
+.fade-in-down { animation-name: fadeInDown; }
+.slide-in-left { animation-name: slideInLeft; }
+.slide-in-right { animation-name: slideInRight; }
+.zoom-in { animation-name: zoomIn; }
+.pulse { animation-name: pulse; }
+.shake { animation-name: shake; }
+.bounce { animation-name: bounce; }
+
+/* Animation Delays */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+.delay-4 { animation-delay: 0.8s; }
+.delay-5 { animation-delay: 1s; }
+
+/* Animation Durations */
+.duration-1 { animation-duration: 0.5s; }
+.duration-2 { animation-duration: 1s; }
+.duration-3 { animation-duration: 1.5s; }
+.duration-4 { animation-duration: 2s; }
+
+/* Animation Speeds */
+.speed-1 { animation-timing-function: ease-in-out; }
+.speed-2 { animation-timing-function: ease-out; }
+.speed-3 { animation-timing-function: ease-in; }
+.speed-4 { animation-timing-function: linear; }
+
+/* Infinite Animations */
+.infinite {
+    animation-iteration-count: infinite;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .animated {
+        animation: none !important;
+        transition: none !important;
+    }
+}

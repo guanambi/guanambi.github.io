@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciativa - Guanambi Robotics</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/dark-theme.css">
+    <link rel="stylesheet" href="/assets/css/animations.css">
+    <link rel="stylesheet" href="/assets/css/components/accessibility.css">
+                
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/images/logo.png">
+</head>
+<body>
+    <!-- Header will be loaded here -->
+    <div id="header-container"></div>
+
+    <main>
+        <!-- Initiative Hero Section -->
+        <section class="initiative-hero">
+            <div class="container">
+                <h1 id="initiative-title">Carregando...</h1>
+                <div class="initiative-meta" id="initiative-meta">
+                    <span class="date">Carregando data...</span> | 
+                    <span class="category">Carregando categoria...</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="initiative-content">
+            <div class="container">
+                <article id="initiative-article">
+                    <div class="loading">Carregando conteúdo...</div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Navegação Rápida</h3>
+                    <ul class="footer-links">
+                        <li><a href="/index.html#inicio">Início</a></li>
+                        <li><a href="/index.html#sobre">Sobre</a></li>
+                        <li><a href="/index.html#comunidade">Comunidade</a></li>
+                        <li><a href="/index.html#blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/guanambi" target="_blank">GitHub</a></li>
+                        <li><a href="#">Mapa do Site</a></li>
+                        <li><a href="#">Ferramentas</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> contato@guanambi.github.io</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Guanambi - BA, Brasil</li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-quote">
+                "Plantar inclusão no sertão baiano é semear um futuro mais justo e acessível para todos."
+            </div>
+            <div class="copyright">
+                &copy; 2025 guanambi.github.io. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core libraries - Loaded first -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    
+    <!-- Debug mode -->
+    <script>
+        window.DEBUG = true;
+    </script>
+    
+    <!-- Application scripts -->
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/accessibility.js"></script>
+    <script src="/assets/js/initiative-loader.js"></script>
+    <script src="/assets/js/analytics.js"></script>
+
+    <script>
+        // Verificar se as bibliotecas foram carregadas
+        if (typeof marked === 'undefined') {
+            console.error('Marked library not loaded');
+            document.getElementById('initiative-article').innerHTML = '<div class="error-message"><h2>Erro ao carregar bibliotecas</h2><p>Por favor, recarregue a página.</p></div>';
+        }
+    </script>
+</body>
+</html>

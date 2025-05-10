@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Guanambi.github.io</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/dark-theme.css">
+    <style>
+        .offline-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .offline-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cached-content {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--secondary-color);
+            border-radius: var(--radius-md);
+        }
+
+        .retry-button {
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-content">
+            <div class="offline-icon">
+                <i class="fas fa-wifi-slash"></i>
+            </div>
+            <h1>Você está offline</h1>
+            <p>Parece que você está sem conexão com a internet no momento. Algumas funcionalidades podem estar limitadas.</p>
+            
+            <div class="cached-content">
+                <h2>Conteúdo disponível offline</h2>
+                <p>Você ainda pode acessar o conteúdo que foi previamente carregado.</p>
+                <ul id="cached-pages" class="offline-links">
+                    <!-- Will be populated dynamically -->
+                </ul>
+            </div>
+
+            <button onclick="checkConnection()" class="btn retry-button">
+                <i class="fas fa-sync"></i> Tentar novamente
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function checkConnection() {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                const button = document.querySelector('.retry-button');
+                button.classList.add('shake');
+                setTimeout(() => button.classList.remove('shake'), 500);
+            }
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+
+        // Populate cached pages
+        async function listCachedPages() {
+            try {
+                const cache = await caches.open('guanambi-cache-v1');
+                const keys = await cache.keys();
+                const cachedPages = document.getElementById('cached-pages');
+                
+                keys.forEach(request => {
+                    if (request.url.endsWith('.html')) {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = request.url;
+                        a.textContent = request.url.split('/').pop() || 'Página Inicial';
+                        li.appendChild(a);
+                        cachedPages.appendChild(li);
+                    }
+                });
+            } catch (error) {
+                console.error('Error listing cached pages:', error);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', listCachedPages);
+    </script>
+</body>
+</html>
