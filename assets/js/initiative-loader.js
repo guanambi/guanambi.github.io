@@ -39,10 +39,27 @@ function initializeInitiativePage() {
     // Add loading state
     articleElement.innerHTML = '<div class="loading">Carregando conteúdo...</div>';
 
-    // Load and render the initiative - Removida a barra inicial para usar caminho relativo
-    const initiativePath = `assets/initiatives/${initiativeId}.md`;
+    // Detect if running on GitHub Pages or locally
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const baseUrl = isGitHubPages ? '' : '';
+    if (window.DEBUG) console.log('Environment:', isGitHubPages ? 'GitHub Pages' : 'Local');
     
+    // Build the correct path based on environment
+    // Try multiple path strategies to ensure compatibility
+    const initiativePath = `${baseUrl}assets/initiatives/${initiativeId}.md`;
+    if (window.DEBUG) console.log('Trying to fetch from:', initiativePath);
+    
+    // First try the relative path
     fetch(initiativePath)
+        .then(response => {
+            if (!response.ok) {
+                // If relative path fails, try with absolute path as fallback
+                const absolutePath = `/${initiativePath}`;
+                if (window.DEBUG) console.log('Relative path failed, trying absolute path:', absolutePath);
+                return fetch(absolutePath);
+            }
+            return response;
+        })
         .then(response => {
             if (!response.ok) throw new Error('Iniciativa não encontrada');
             return response.text();
