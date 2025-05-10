@@ -39,31 +39,38 @@ function initializeInitiativePage() {
     // Add loading state
     articleElement.innerHTML = '<div class="loading">Carregando conteúdo...</div>';
 
-    // Detect if running on GitHub Pages or locally
-    const isGitHubPages = window.location.hostname.includes('github.io');
-    const baseUrl = isGitHubPages ? '' : '';
-    if (window.DEBUG) console.log('Environment:', isGitHubPages ? 'GitHub Pages' : 'Local');
-    
-    // Build the correct path based on environment
     // Try multiple path strategies to ensure compatibility
-    const initiativePath = `${baseUrl}assets/initiatives/${initiativeId}.md`;
-    if (window.DEBUG) console.log('Trying to fetch from:', initiativePath);
+    function tryLoadFile(paths, currentIndex = 0) {
+        if (currentIndex >= paths.length) {
+            showError('Iniciativa não encontrada');
+            return Promise.reject(new Error('Iniciativa não encontrada'));
+        }
+
+        const currentPath = paths[currentIndex];
+        if (window.DEBUG) console.log(`Tentativa ${currentIndex + 1}/${paths.length}: Tentando carregar: ${currentPath}`);
+        
+        return fetch(currentPath)
+            .then(response => {
+                if (!response.ok) {
+                    if (window.DEBUG) console.log(`Caminho ${currentPath} falhou, tentando próxima estratégia...`);
+                    return tryLoadFile(paths, currentIndex + 1);
+                }
+                if (window.DEBUG) console.log(`Arquivo carregado com sucesso de: ${currentPath}`);
+                return response.text();
+            });
+    }
+
+    // Define all possible paths to try (ordem importante)
+    const pathsToTry = [
+        `assets/initiatives/${initiativeId}.md`,                      // Relativo à raiz
+        `./assets/initiatives/${initiativeId}.md`,                    // Relativo ao diretório atual
+        `/assets/initiatives/${initiativeId}.md`,                     // Absoluto
+        `/guanambi.github.io/assets/initiatives/${initiativeId}.md`,  // GitHub Pages específico
+        `https://guanambi.github.io/assets/initiatives/${initiativeId}.md` // URL Completa
+    ];
     
-    // First try the relative path
-    fetch(initiativePath)
-        .then(response => {
-            if (!response.ok) {
-                // If relative path fails, try with absolute path as fallback
-                const absolutePath = `/${initiativePath}`;
-                if (window.DEBUG) console.log('Relative path failed, trying absolute path:', absolutePath);
-                return fetch(absolutePath);
-            }
-            return response;
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Iniciativa não encontrada');
-            return response.text();
-        })
+    // Try all paths
+    tryLoadFile(pathsToTry)
         .then(text => {
             if (window.DEBUG) console.log('Initiative content loaded');
 

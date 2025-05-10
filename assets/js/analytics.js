@@ -64,8 +64,8 @@ class Analytics {
         this.events.push(event);
         this.saveToStorage();
         
-        // Log para desenvolvimento
-        if (process.env.NODE_ENV === 'development') {
+        // Log para desenvolvimento - versão segura para navegador
+        if (window.DEBUG) {
             console.log('Analytics Event:', event);
         }
     }

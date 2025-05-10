@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Theme toggle
     function updateThemeIcon() {
+        // Verificar se themeToggle existe antes de tentar acessar suas propriedades
+        if (!themeToggle) return;
+        
         const icon = themeToggle.querySelector('i');
         const isDark = document.body.classList.contains('dark-theme');
         icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
