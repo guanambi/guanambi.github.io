@@ -74,31 +74,54 @@ function initializeInitiativePage() {
         .then(text => {
             if (window.DEBUG) console.log('Initiative content loaded');
 
-            // Split front matter and content
-            const [, frontMatter, content] = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-            
-            // Parse front matter
-            const metadata = jsyaml.load(frontMatter);
-            if (window.DEBUG) console.log('Front matter:', metadata);
-
-            // Update page title and meta
-            document.title = `${metadata.title} - Guanambi Robotics`;
-            titleElement.textContent = metadata.title;
-            
-            // Update meta information in hero section
-            metaElement.innerHTML = `
-                <span class="date">
-                    <i class="fas fa-calendar"></i>
-                    ${new Date(metadata.date).toLocaleDateString('pt-BR')}
-                </span>
-                <span class="category">
-                    <i class="fas fa-folder"></i>
-                    ${metadata.category}
-                </span>
-            `;
-
-            // Convert markdown to HTML using marked
             try {
+                // Log the raw content for debugging
+                if (window.DEBUG) console.log('Raw content:', text.substring(0, 200) + '...');
+                
+                // Verificar se o texto está vazio
+                if (!text || text.trim() === '') {
+                    throw new Error('Arquivo vazio ou inválido');
+                }
+
+                // Extrair front matter e conteúdo de forma mais robusta
+                let frontMatter = {};
+                let content = text;
+                
+                // Tentar diferentes padrões de front matter
+                const fmPattern = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+                const match = text.match(fmPattern);
+                
+                if (match) {
+                    try {
+                        frontMatter = jsyaml.load(match[1]) || {};
+                        content = match[2] || '';
+                    } catch (yamlError) {
+                        console.error('Error parsing YAML front matter:', yamlError);
+                        // Continue com frontMatter vazio se não conseguir parsear
+                    }
+                } else {
+                    console.warn('Front matter não encontrado, usando conteúdo completo');
+                }
+                
+                if (window.DEBUG) console.log('Front matter parsed:', frontMatter);
+
+                // Update page title and meta
+                document.title = `${frontMatter.title || 'Iniciativa'} - Guanambi Robotics`;
+                titleElement.textContent = frontMatter.title || 'Iniciativa';
+                
+                // Update meta information in hero section
+                metaElement.innerHTML = `
+                    <span class="date">
+                        <i class="fas fa-calendar"></i>
+                        ${frontMatter.date ? new Date(frontMatter.date).toLocaleDateString('pt-BR') : 'Data não informada'}
+                    </span>
+                    <span class="category">
+                        <i class="fas fa-folder"></i>
+                        ${frontMatter.category || 'Categoria não informada'}
+                    </span>
+                `;
+
+                // Convert markdown to HTML using marked
                 const contentHtml = marked.parse(content);
                 if (window.DEBUG) console.log('Content processed successfully');
 
@@ -109,9 +132,9 @@ function initializeInitiativePage() {
                     </div>
                     
                     <div class="image-gallery">
-                        ${(metadata.images || []).map(img => `
+                        ${(frontMatter.images || []).map(img => `
                             <figure>
-                                <img src="${img}" alt="Imagem do projeto" loading="lazy">
+                                <img src="${img.startsWith('/') ? img.substring(1) : img}" alt="Imagem do projeto" loading="lazy">
                             </figure>
                         `).join('')}
                     </div>
@@ -121,32 +144,32 @@ function initializeInitiativePage() {
                         <ul>
                             <li>
                                 <i class="fas fa-project-diagram"></i>
-                                <strong>Projeto:</strong> ${metadata.project_info?.nome || 'Não informado'}
+                                <strong>Projeto:</strong> ${frontMatter.project_info?.nome || 'Não informado'}
                             </li>
                             <li>
                                 <i class="fas fa-calendar-alt"></i>
-                                <strong>Ano:</strong> ${metadata.project_info?.ano || 'Não informado'}
+                                <strong>Ano:</strong> ${frontMatter.project_info?.ano || 'Não informado'}
                             </li>
                             <li>
                                 <i class="fas fa-map-marker-alt"></i>
-                                <strong>Local:</strong> ${metadata.project_info?.local || 'Não informado'}
+                                <strong>Local:</strong> ${frontMatter.project_info?.local || 'Não informado'}
                             </li>
                             <li>
                                 <i class="fas fa-users"></i>
-                                <strong>Estudantes:</strong> ${metadata.project_info?.estudantes
-                                    ? metadata.project_info.estudantes.map(e => `${e.nome} (${e.papel})`).join(', ')
+                                <strong>Estudantes:</strong> ${frontMatter.project_info?.estudantes
+                                    ? frontMatter.project_info.estudantes.map(e => `${e.nome} (${e.papel})`).join(', ')
                                     : 'Não informado'}
                             </li>
                             <li>
                                 <i class="fas fa-user-tie"></i>
-                                <strong>Coordenador:</strong> ${metadata.project_info?.coordenador || 'Não informado'}
+                                <strong>Coordenador:</strong> ${frontMatter.project_info?.coordenador || 'Não informado'}
                             </li>
                         </ul>
                     </div>
                 `;
             } catch (error) {
-                console.error('Error processing markdown:', error);
-                showError('Erro ao processar o conteúdo');
+                console.error('Error processing initiative:', error);
+                showError('Erro ao processar o conteúdo: ' + error.message);
             }
         })
         .catch(error => {
